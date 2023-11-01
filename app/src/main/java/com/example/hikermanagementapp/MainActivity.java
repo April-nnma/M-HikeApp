@@ -1,7 +1,9 @@
 package com.example.hikermanagementapp;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -70,49 +72,63 @@ public class MainActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Lấy giá trị từ các thành phần và xử lý theo ý của bạn
-                String hikeName = hikeNameEditText.getText().toString();
-                String location = locationEditText.getText().toString();
-                String selectedDate = dateEditText.getText().toString();
-                String selectedTime = timeEditText.getText().toString();
-                String numberOfDays = numberOfDaysEditText.getText().toString();
-                String description = descriptionEditText.getText().toString();
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Confirm storage");
+                builder.setMessage("Are you sure you want to save this information?");
 
-                // Lấy giá trị từ RadioGroup
-                int selectedParkingRadioButtonId = parkingRadioGroup.getCheckedRadioButtonId();
-                RadioButton selectedParkingRadioButton = findViewById(selectedParkingRadioButtonId);
-                String parkingAvailable = selectedParkingRadioButton.getText().toString();
+                builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Lấy giá trị từ các thành phần và xử lý theo ý của bạn
+                        String hikeName = hikeNameEditText.getText().toString();
+                        String location = locationEditText.getText().toString();
+                        String selectedDate = dateEditText.getText().toString();
+                        String selectedTime = timeEditText.getText().toString();
+                        String numberOfDays = numberOfDaysEditText.getText().toString();
+                        String description = descriptionEditText.getText().toString();
+                        int selectedParkingRadioButtonId = parkingRadioGroup.getCheckedRadioButtonId();
+                        RadioButton selectedParkingRadioButton = findViewById(selectedParkingRadioButtonId);
+                        String parkingAvailable = selectedParkingRadioButton.getText().toString();
+                        boolean hasWater = checkBox1.isChecked();
+                        boolean hasFlashlight = checkBox2.isChecked();
+                        boolean hasMap = checkBox3.isChecked();
+                        boolean hasSnacks = checkBox4.isChecked();
+                        boolean hasFirstAidKit = checkBox5.isChecked();
+                        float rating = ratingBar.getRating();
 
-                // Lấy giá trị từ CheckBoxes
-                boolean hasWater = checkBox1.isChecked();
-                boolean hasFlashlight = checkBox2.isChecked();
-                boolean hasMap = checkBox3.isChecked();
-                boolean hasSnacks = checkBox4.isChecked();
-                boolean hasFirstAidKit = checkBox5.isChecked();
+                        // Tạo Intent để chuyển dữ liệu đến Activity khác
+                        Intent intent = new Intent(MainActivity.this, ViewActivity.class);
+                        intent.putExtra("HikeName", hikeName);
+                        intent.putExtra("Location", location);
+                        intent.putExtra("Date", selectedDate);
+                        intent.putExtra("Time", selectedTime);
+                        intent.putExtra("NumberOfDays", numberOfDays);
+                        intent.putExtra("Description", description);
+                        intent.putExtra("ParkingAvailable", parkingAvailable);
+                        intent.putExtra("HasWater", hasWater);
+                        intent.putExtra("HasFlashlight", hasFlashlight);
+                        intent.putExtra("HasMap", hasMap);
+                        intent.putExtra("HasSnacks", hasSnacks);
+                        intent.putExtra("HasFirstAidKit", hasFirstAidKit);
+                        intent.putExtra("Rating", rating);
 
-                // Lấy giá trị từ RatingBar
-                float rating = ratingBar.getRating();
+                        // Chuyển đến Activity ViewActivity và gửi dữ liệu
+                        startActivity(intent);
+                    }
+                });
 
-                // Tạo một Intent để chuyển dữ liệu đến Activity khác
-                Intent intent = new Intent(MainActivity.this, ViewActivity.class);
-                intent.putExtra("HikeName", hikeName);
-                intent.putExtra("Location", location);
-                intent.putExtra("Date", selectedDate);
-                intent.putExtra("Time", selectedTime);
-                intent.putExtra("NumberOfDays", numberOfDays);
-                intent.putExtra("Description", description);
-                intent.putExtra("ParkingAvailable", parkingAvailable);
-                intent.putExtra("HasWater", hasWater);
-                intent.putExtra("HasFlashlight", hasFlashlight);
-                intent.putExtra("HasMap", hasMap);
-                intent.putExtra("HasSnacks", hasSnacks);
-                intent.putExtra("HasFirstAidKit", hasFirstAidKit);
-                intent.putExtra("Rating", rating);
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
 
-                // Chuyển đến Activity ViewActivity và gửi dữ liệu
-                startActivity(intent);
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
+
 
         viewButton.setOnClickListener(new View.OnClickListener() {
             @Override

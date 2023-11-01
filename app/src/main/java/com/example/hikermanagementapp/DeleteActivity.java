@@ -1,4 +1,4 @@
 package com.example.hikermanagementapp;
 
-public class HikeInfo {
+public class DeleteActivity {
 }
