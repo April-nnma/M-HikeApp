@@ -1,24 +1,26 @@
 package com.example.hikermanagementapp;
 
+import static android.content.DialogInterface.*;
+
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.health.connect.datatypes.units.Length;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 import android.widget.ArrayAdapter;
-import android.view.View;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,38 +30,38 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
 
     private EditText hikeNameEditText, locationEditText, dateEditText, timeEditText,
-            numberOfDaysEditText, descriptionEditText;
+            numberOfDaysEditText, descriptionEditText, gearEditText;
     private RadioGroup parkingRadioGroup;
     private RadioButton yesRadioButton, noRadioButton;
     private Spinner difficultySpinner;
-    private CheckBox checkBox1, checkBox2, checkBox3, checkBox4, checkBox5;
-    private RatingBar ratingBar;
+    private EditText lengthEditText;
     private Button saveButton, viewButton;
     private FloatingActionButton dateFab, timeFab;
+
     private String[] difficultyLevels = {"easy", "normal", "hard"};
+    private DatabaseHelper dbHelper;
 
 
+    @SuppressLint({"WrongViewCast", "MissingInflatedId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        dbHelper = new DatabaseHelper(this);
+
         hikeNameEditText = findViewById(R.id.hikeNameEditText);
         locationEditText = findViewById(R.id.locationEditText);
         dateEditText = findViewById(R.id.dateEditText);
-        timeEditText = findViewById(R.id.dateEditText2);
+        timeEditText= findViewById(R.id.timeEditText);
         numberOfDaysEditText = findViewById(R.id.numberOfDaysEditText);
         descriptionEditText = findViewById(R.id.descriptionEditText);
+        lengthEditText = findViewById(R.id.lengthEditText);
+        gearEditText = findViewById(R.id.gearEditText2);
         parkingRadioGroup = findViewById(R.id.parkingRadioGroup);
         yesRadioButton = findViewById(R.id.yesRadioButton);
         noRadioButton = findViewById(R.id.noRadioButton);
         difficultySpinner = findViewById(R.id.difficultySpinner);
-        checkBox1 = findViewById(R.id.checkBox1);
-        checkBox2 = findViewById(R.id.checkBox2);
-        checkBox3 = findViewById(R.id.checkBox3);
-        checkBox4 = findViewById(R.id.checkBox4);
-        checkBox5 = findViewById(R.id.checkBox5);
-        ratingBar = findViewById(R.id.ratingBar);
         saveButton = findViewById(R.id.saveButton);
         viewButton = findViewById(R.id.viewButton);
         dateFab = findViewById(R.id.floatingActionButton);
@@ -73,47 +75,61 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Confirm storage");
-                builder.setMessage("Are you sure you want to save this information?");
+                builder.setTitle("Confirmation");
+                builder.setMessage("Are you sure you want to save this hike?");
 
-                builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // Lấy giá trị từ các thành phần và xử lý theo ý của bạn
                         String hikeName = hikeNameEditText.getText().toString();
                         String location = locationEditText.getText().toString();
                         String selectedDate = dateEditText.getText().toString();
                         String selectedTime = timeEditText.getText().toString();
-                        String numberOfDays = numberOfDaysEditText.getText().toString();
+                        int numberOfDays = Integer.parseInt(numberOfDaysEditText.getText().toString());
+                        String length = lengthEditText.getText().toString();
+                        String parkingAvailable = getSelectedParkingOption();
+                        String difficulty = difficultySpinner.getSelectedItem().toString();
                         String description = descriptionEditText.getText().toString();
-                        int selectedParkingRadioButtonId = parkingRadioGroup.getCheckedRadioButtonId();
-                        RadioButton selectedParkingRadioButton = findViewById(selectedParkingRadioButtonId);
-                        String parkingAvailable = selectedParkingRadioButton.getText().toString();
-                        boolean hasWater = checkBox1.isChecked();
-                        boolean hasFlashlight = checkBox2.isChecked();
-                        boolean hasMap = checkBox3.isChecked();
-                        boolean hasSnacks = checkBox4.isChecked();
-                        boolean hasFirstAidKit = checkBox5.isChecked();
-                        float rating = ratingBar.getRating();
+                        String gear = gearEditText.getText().toString();
 
-                        // Tạo Intent để chuyển dữ liệu đến Activity khác
-                        Intent intent = new Intent(MainActivity.this, ViewActivity.class);
-                        intent.putExtra("HikeName", hikeName);
-                        intent.putExtra("Location", location);
-                        intent.putExtra("Date", selectedDate);
-                        intent.putExtra("Time", selectedTime);
-                        intent.putExtra("NumberOfDays", numberOfDays);
-                        intent.putExtra("Description", description);
-                        intent.putExtra("ParkingAvailable", parkingAvailable);
-                        intent.putExtra("HasWater", hasWater);
-                        intent.putExtra("HasFlashlight", hasFlashlight);
-                        intent.putExtra("HasMap", hasMap);
-                        intent.putExtra("HasSnacks", hasSnacks);
-                        intent.putExtra("HasFirstAidKit", hasFirstAidKit);
-                        intent.putExtra("Rating", rating);
+                        long newRowId = dbHelper.addHike(hikeName, location, selectedDate, selectedTime, numberOfDays, length, parkingAvailable, difficulty, description, gear);
 
-                        // Chuyển đến Activity ViewActivity và gửi dữ liệu
-                        startActivity(intent);
+                        if (newRowId != -1) {
+                            AlertDialog.Builder successBuilder = new AlertDialog.Builder(MainActivity.this);
+                            successBuilder.setTitle("Success");
+                            successBuilder.setMessage("Hike information has been saved successfully.");
+                            successBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            AlertDialog successDialog = successBuilder.create();
+                            successDialog.show();
+
+                            hikeNameEditText.setText("");
+                            locationEditText.setText("");
+                            dateEditText.setText("");
+                            timeEditText.setText("");
+                            numberOfDaysEditText.setText("");
+                            lengthEditText.setText("");
+                            yesRadioButton.setChecked(false);
+                            noRadioButton.setChecked(false);
+                            descriptionEditText.setText("");
+                            gearEditText.setText("");
+                        } else {
+                            AlertDialog.Builder errorBuilder = new AlertDialog.Builder(MainActivity.this);
+                            errorBuilder.setTitle("Error");
+                            errorBuilder.setMessage("Failed to save hike information. Please try again.");
+                            errorBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            AlertDialog errorDialog = errorBuilder.create();
+                            errorDialog.show();
+                        }
                     }
                 });
 
@@ -124,20 +140,21 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                AlertDialog confirmationDialog = builder.create();
+                confirmationDialog.show();
             }
         });
-
-
         viewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Xử lý khi nhấn nút View
+                // Tạo một Intent để chuyển từ MainActivity sang ViewActivity
                 Intent intent = new Intent(MainActivity.this, ViewActivity.class);
+                // Khởi chạy Activity ViewActivity
                 startActivity(intent);
             }
         });
+
+
 
         dateFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,6 +169,15 @@ public class MainActivity extends AppCompatActivity {
                 showTimePickerDialog();
             }
         });
+    }
+    private String getSelectedParkingOption() {
+        if (yesRadioButton.isChecked()) {
+            return "Yes";
+        } else if (noRadioButton.isChecked()) {
+            return "No";
+        } else {
+            return "Not Specified";
+        }
     }
 
     private void showDatePickerDialog() {

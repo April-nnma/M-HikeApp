@@ -19,11 +19,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_DATE = "date";
     private static final String COLUMN_TIME = "time";
     private static final String COLUMN_NUMBER_OF_DAYS = "number_of_days";
-    private static final String COLUMN_DESCRIPTION = "description";
+    private static final String COLUMN_NUMBER_LENGTH = "length";
     private static final String COLUMN_PARKING = "parking";
     private static final String COLUMN_DIFFICULTY = "difficulty";
+    private static final String COLUMN_DESCRIPTION = "description";
     private static final String COLUMN_REQUIRED_GEAR = "required_gear";
-    private static final String COLUMN_RATING = "rating";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -38,11 +38,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_DATE + " TEXT, " +
                 COLUMN_TIME + " TEXT, " +
                 COLUMN_NUMBER_OF_DAYS + " INTEGER, " +
-                COLUMN_DESCRIPTION + " TEXT, " +
+                COLUMN_NUMBER_LENGTH + " TEXT, " +
                 COLUMN_PARKING + " TEXT, " +
                 COLUMN_DIFFICULTY + " TEXT, " +
-                COLUMN_REQUIRED_GEAR + " TEXT, " +
-                COLUMN_RATING + " REAL" +
+                COLUMN_DESCRIPTION + " TEXT, " +
+                COLUMN_REQUIRED_GEAR + " TEXT" +
                 ")";
         db.execSQL(createTableQuery);
     }
@@ -52,33 +52,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Xử lý khi có sự thay đổi phiên bản cơ sở dữ liệu (nếu cần)
     }
 
-    public long addHike(Hiker hike) {
+    public long addHike(String name, String location, String date, String time, int number, String length, String parking, String difficult, String description, String gear) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(COLUMN_HIKE_NAME, hike.getHikeName());
-        values.put(COLUMN_LOCATION, hike.getLocation());
-        values.put(COLUMN_DATE, hike.getDate());
-        values.put(COLUMN_TIME, hike.getTime());
-        values.put(COLUMN_NUMBER_OF_DAYS, hike.getNumberOfDays());
-        values.put(COLUMN_DESCRIPTION, hike.getDescription());
-        values.put(COLUMN_PARKING, hike.getParking());
-        values.put(COLUMN_DIFFICULTY, hike.getDifficulty());
-        values.put(COLUMN_REQUIRED_GEAR, hike.getRequiredGear());
-        values.put(COLUMN_RATING, hike.getRating());
+        values.put(COLUMN_HIKE_NAME, name);
+        values.put(COLUMN_LOCATION, location);
+        values.put(COLUMN_DATE, date);
+        values.put(COLUMN_TIME, time);
+        values.put(COLUMN_NUMBER_OF_DAYS, number);
+        values.put(COLUMN_NUMBER_LENGTH, length);
+        values.put(COLUMN_PARKING, parking);
+        values.put(COLUMN_DIFFICULTY, difficult);
+        values.put(COLUMN_DESCRIPTION, description);
+        values.put(COLUMN_REQUIRED_GEAR, gear);
 
         long newRowId = db.insert(TABLE_HIKES, null, values);
         db.close();
         return newRowId;
     }
 
-    public List<Hiker> getAllHikes() {
-        List<Hiker> hikes = new ArrayList<>();
+    public List<Hike> getAllHikes() {
+        List<Hike> hikes = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         String[] projection = {
                 COLUMN_ID, COLUMN_HIKE_NAME, COLUMN_LOCATION,
-                COLUMN_DATE, COLUMN_TIME, COLUMN_NUMBER_OF_DAYS,
+                COLUMN_DATE, COLUMN_TIME, COLUMN_NUMBER_OF_DAYS, COLUMN_NUMBER_LENGTH,
                 COLUMN_DESCRIPTION, COLUMN_PARKING, COLUMN_DIFFICULTY,
-                COLUMN_REQUIRED_GEAR, COLUMN_RATING
+                COLUMN_REQUIRED_GEAR
         };
         Cursor cursor = db.query(TABLE_HIKES, projection, null, null, null, null, null);
 
@@ -89,19 +89,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             String date = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATE));
             String time = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIME));
             int numberOfDays = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_NUMBER_OF_DAYS));
-            String description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION));
+            String lengthText = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NUMBER_LENGTH));
             String parking = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PARKING));
             String difficulty = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DIFFICULTY));
             String requiredGear = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REQUIRED_GEAR));
-            float rating = cursor.getFloat(cursor.getColumnIndexOrThrow(COLUMN_RATING));
+            String description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION));
 
-            Hiker hike = new Hiker(hikeId, hikeName, location, date, time, numberOfDays, description, parking, difficulty, requiredGear, rating);
+            Hike hike = new Hike(hikeId, hikeName, location, date, time, numberOfDays, description, lengthText, parking, difficulty, requiredGear);
             hikes.add(hike);
         }
 
         cursor.close();
         db.close();
         return hikes;
+    }
+
+    public void editHike(long hikeId, String name, String location, String date, String time, int number, String length, String parking, String difficult, String description, String gear) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_HIKE_NAME, name);
+        values.put(COLUMN_LOCATION, location);
+        values.put(COLUMN_DATE, date);
+        values.put(COLUMN_TIME, time);
+        values.put(COLUMN_NUMBER_OF_DAYS, number);
+        values.put(COLUMN_NUMBER_LENGTH, length);
+        values.put(COLUMN_PARKING, parking);
+        values.put(COLUMN_DIFFICULTY, difficult);
+        values.put(COLUMN_DESCRIPTION, description);
+        values.put(COLUMN_REQUIRED_GEAR, gear);
+
+        String selection = COLUMN_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(hikeId)};
+
+        db.update(TABLE_HIKES, values, selection, selectionArgs);
+        db.close();
     }
 
     public void deleteHike(long hikeId) {
