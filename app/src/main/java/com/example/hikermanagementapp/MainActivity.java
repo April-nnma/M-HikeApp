@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private RadioButton yesRadioButton, noRadioButton;
     private Spinner difficultySpinner;
     private EditText lengthEditText;
-    private Button saveButton, viewButton;
+    private Button saveButton, viewButton, updateButton;
     private FloatingActionButton dateFab, timeFab;
 
     private String[] difficultyLevels = {"easy", "normal", "hard"};
@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         difficultyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         difficultySpinner.setAdapter(difficultyAdapter);
 
+        //save data
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,6 +145,8 @@ public class MainActivity extends AppCompatActivity {
                 confirmationDialog.show();
             }
         });
+
+        //view data
         viewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,8 +157,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
+        //Date & Time Picker
         dateFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,7 +215,5 @@ public class MainActivity extends AppCompatActivity {
         timePickerDialog.show();
     }
 }
-
-
 
 

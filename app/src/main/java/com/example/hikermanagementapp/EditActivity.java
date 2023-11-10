@@ -2,14 +2,20 @@ package com.example.hikermanagementapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
-public class Edit extends AppCompatActivity {
+public class EditActivity extends AppCompatActivity {
     private EditText editHike, editLocation, editDate, editTime, editNumber, editLength, editDescription, editGear;
     private RadioButton yesRadioButton, noRadioButton;
     private Spinner difficultySpinner;
@@ -42,7 +48,8 @@ public class Edit extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             hikeId = extras.getLong("HIKE_ID");
-            Hike hike = databaseHelper.getAllHikes().get((int) hikeId);
+            Hike hike = databaseHelper.getHikeById(hikeId);
+
             if (hike != null) {
                 editHike.setText(hike.getHikeName());
                 editLocation.setText(hike.getLocation());
@@ -59,10 +66,6 @@ public class Edit extends AppCompatActivity {
                     noRadioButton.setChecked(true);
                 }
 
-                //ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, difficultyLevels, android.R.layout.simple_spinner_item);
-                //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                //difficultySpinner.setAdapter(adapter);
-
                 ArrayAdapter<String> difficultyAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, difficultyLevels);
                 difficultyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 difficultySpinner.setAdapter(difficultyAdapter);
@@ -73,5 +76,32 @@ public class Edit extends AppCompatActivity {
                 }
             }
         }
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean isDeleted = databaseHelper.deleteHike(hikeId);
+                    if (isDeleted) {
+                        showAlert("Success", "Hike information has been deleted successfully.");
+                    } else {
+                        showAlert("Error", "Failed to delete hike information. Please try again.");
+                    }
+                }
+            });
+
+        }
+
+    private void showAlert(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                //
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

@@ -1,20 +1,14 @@
 package com.example.hikermanagementapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.hikermanagementapp.R;
 
 import java.util.List;
 
@@ -50,14 +44,7 @@ public class HikeAdapter extends RecyclerView.Adapter<HikeAdapter.ViewHolder> {
         holder.difficultyTextView.setText("Level: " + hike.getDifficulty());
         holder.gearTextView.setText("Required Gear: " + hike.getRequiredGear());
 
-        holder.hikeItem.setOnClickListener(v -> {
-            Bundle extras = new Bundle();
-            extras.putLong("HIKE_ID", hike.getId());
-
-            Intent intent = new Intent(v.getContext(), Edit.class);
-            intent.putExtras(extras);
-            v.getContext().startActivity(intent);
-        });
+        holder.hikeId.setText(String.valueOf(hike.getId()));
     }
 
     @Override
@@ -66,10 +53,10 @@ public class HikeAdapter extends RecyclerView.Adapter<HikeAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public CardView hikeItem;
+        //public CardView hikeItem;
         public TextView hikeNameTextView, locationTextView, dateTextView, timeTextView,
                 daysTextView, lengthTextView, descriptionTextView, parkingTextView,
-                difficultyTextView, gearTextView;
+                difficultyTextView, gearTextView, hikeId;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -83,16 +70,20 @@ public class HikeAdapter extends RecyclerView.Adapter<HikeAdapter.ViewHolder> {
             parkingTextView = itemView.findViewById(R.id.viewParking);
             difficultyTextView = itemView.findViewById(R.id.viewLevel);
             gearTextView = itemView.findViewById(R.id.viewGear);
+            hikeId = itemView.findViewById(R.id.itemViewHikeId);
 
-            hikeItem = itemView.findViewById(R.id.hikeItem);
-            //hikeItem.setOnClickListener(v -> {
-            //    Intent intent = new Intent(v.getContext(), Edit.class);
-            //    v.getContext().startActivity(intent);
-            //});
+            itemView.setOnClickListener(v -> {
+                Bundle extras = new Bundle();
+                extras.putLong("HIKE_ID", Long.valueOf(hikeId.getText().toString()));
+
+                Intent intent = new Intent(v.getContext(), EditActivity.class);
+                intent.putExtras(extras);
+                v.getContext().startActivity(intent);
+            });
         }
     }
 
-    // Phương thức chuyển đổi giá trị trường "Parking" thành "Available" hoặc "Not Available"
+
     private String convertParkingStatus(String parkingValue) {
         if ("1".equals(parkingValue)) {
             return "Available";

@@ -117,8 +117,6 @@
         app:layout_constraintStart_toEndOf="@+id/difficultyLabel"
         app:layout_constraintTop_toTopOf="@+id/difficultyLabel" />
 
-    <!-- Save Button -->
-
     <EditText
         android:id="@+id/editDescription"
         android:layout_width="0dp"
