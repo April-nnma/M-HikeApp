@@ -7,13 +7,21 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 import android.widget.Spinner;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.Calendar;
 
 public class EditActivity extends AppCompatActivity {
     private EditText editHike, editLocation, editDate, editTime, editNumber, editLength, editDescription, editGear;
@@ -21,6 +29,7 @@ public class EditActivity extends AppCompatActivity {
     private Spinner difficultySpinner;
     private Button updateButton, deleteButton;
     private DatabaseHelper databaseHelper;
+    private FloatingActionButton dateFab, timeFab;
     private long hikeId;
     private String[] difficultyLevels = {"easy", "normal", "hard"};
 
@@ -42,6 +51,8 @@ public class EditActivity extends AppCompatActivity {
         difficultySpinner = findViewById(R.id.difficultySpinner);
         updateButton = findViewById(R.id.updateButton);
         deleteButton = findViewById(R.id.deleteButton);
+        dateFab = findViewById(R.id.floatingActionButton);
+        timeFab = findViewById(R.id.floatingActionButton2);
 
         databaseHelper = new DatabaseHelper(this);
 
@@ -76,20 +87,64 @@ public class EditActivity extends AppCompatActivity {
                 }
             }
         }
-            deleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    boolean isDeleted = databaseHelper.deleteHike(hikeId);
-                    if (isDeleted) {
-                        showAlert("Success", "Hike information has been deleted successfully.");
-                    } else {
-                        showAlert("Error", "Failed to delete hike information. Please try again.");
-                    }
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String updatedHikeName = editHike.getText().toString();
+                String updatedLocation = editLocation.getText().toString();
+                String updatedDate = editDate.getText().toString();
+                String updatedTime = editTime.getText().toString();
+                int updatedNumberOfDays = Integer.parseInt(editNumber.getText().toString());
+                String updatedLength = editLength.getText().toString();
+                String updatedDescription = editDescription.getText().toString();
+                String updatedGear = editGear.getText().toString();
+                String updatedParking = yesRadioButton.isChecked() ? "Yes" : "No";
+                String updatedDifficulty = difficultySpinner.getSelectedItem().toString();
+
+
+                // Update information in the database
+                databaseHelper.editHike(hikeId, updatedHikeName, updatedLocation, updatedDate,
+                        updatedTime, updatedNumberOfDays, updatedLength, updatedParking, updatedDifficulty,
+                        updatedDescription, updatedGear, new DatabaseHelper.EditHikeCallback() {
+                            @Override
+                            public void onEditHikeSuccess() {
+                                showAlert("Success", "Hike information has been updated successfully.");
+                            }
+
+                            @Override
+                            public void onEditHikeFailure(String errorMessage) {
+                                showAlert("Error", "Failed to update hike information. " + errorMessage);
+                            }
+                        });
+            }
+        });
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean isDeleted = databaseHelper.deleteHike(hikeId);
+                if (isDeleted) {
+                    showAlert("Success", "Hike information has been deleted successfully.");
+                } else {
+                    showAlert("Error", "Failed to delete hike information. Please try again.");
                 }
-            });
+            }
+        });
 
-        }
+        dateFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+            }
+        });
 
+        timeFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimePickerDialog();
+            }
+        });
+    }
     private void showAlert(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
@@ -104,4 +159,39 @@ public class EditActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+    private void showDatePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        String selectedDate = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
+                        editDate.setText(selectedDate);
+                    }
+                }, year, month, day);
+        datePickerDialog.show();
+    }
+    private void showTimePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        String selectedTime = hourOfDay + ":" + minute;
+                        editTime.setText(selectedTime);
+                    }
+                }, hour, minute, true);
+        timePickerDialog.show();
+    }
+
+
 }
+
+

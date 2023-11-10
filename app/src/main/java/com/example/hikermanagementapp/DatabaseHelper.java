@@ -144,7 +144,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return hike;
     }
 
-    public void editHike(long hikeId, String name, String location, String date, String time, int number, String length, String parking, String difficult, String description, String gear) {
+    public void editHike(long hikeId, String name, String location, String date, String time, int number, String length, String parking, String difficult, String description, String gear, EditHikeCallback callback) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_HIKE_NAME, name);
@@ -161,9 +161,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String selection = COLUMN_ID + " = ?";
         String[] selectionArgs = {String.valueOf(hikeId)};
 
-        db.update(TABLE_HIKES, values, selection, selectionArgs);
-        db.close();
+        try {
+            int rowsUpdated = db.update(TABLE_HIKES, values, selection, selectionArgs);
+            db.close();
+
+            if (rowsUpdated > 0) {
+                callback.onEditHikeSuccess();
+            } else {
+                callback.onEditHikeFailure("No rows updated");
+            }
+        } catch (Exception e) {
+            callback.onEditHikeFailure("Error updating hike: " + e.getMessage());
+        }
     }
+
+    // Define an interface for the callback
+    public interface EditHikeCallback {
+        void onEditHikeSuccess();
+        void onEditHikeFailure(String errorMessage);
+    }
+
 
     public boolean deleteHike(long hikeId) {
         SQLiteDatabase db = this.getWritableDatabase();

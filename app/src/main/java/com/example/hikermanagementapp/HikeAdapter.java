@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HikeAdapter extends RecyclerView.Adapter<HikeAdapter.ViewHolder> {
@@ -17,7 +20,13 @@ public class HikeAdapter extends RecyclerView.Adapter<HikeAdapter.ViewHolder> {
     private List<Hike> hikes;
 
     public HikeAdapter(List<Hike> hikes) {
-        this.hikes = hikes;
+        this.hikes = new ArrayList<>(hikes); // Initialize full list with original data
+    }
+
+    public void UpdateList(List<Hike> hikes) {
+        this.hikes = new ArrayList<>(hikes); // Initialize full list with original data
+
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -52,8 +61,43 @@ public class HikeAdapter extends RecyclerView.Adapter<HikeAdapter.ViewHolder> {
         return hikes.size();
     }
 
+//    @Override
+//    public Filter getFilter() {
+//        return hikeFilter;
+//    }
+
+//    private Filter hikeFilter = new Filter() {
+//        @Override
+//        protected FilterResults performFiltering(CharSequence constraint) {
+//            List<Hike> filteredList = new ArrayList<>();
+//
+//            if (constraint == null || constraint.length() == 0) {
+//                filteredList.addAll(hikes);
+//            } else {
+//                String filterPattern = constraint.toString().toLowerCase().trim();
+//
+//                for (Hike hike : hikes) {
+//                    if (hike.getHikeName().toLowerCase().contains(filterPattern)
+//                            || hike.getLocation().toLowerCase().contains(filterPattern)) {
+//                        filteredList.add(hike);
+//                    }
+//                }
+//            }
+//
+//            FilterResults results = new FilterResults();
+//            results.values = filteredList;
+//            return results;
+//        }
+//
+//        @Override
+//        protected void publishResults(CharSequence constraint, FilterResults results) {
+//            hikes.clear();
+//            hikes.addAll((List) results.values);
+//            notifyDataSetChanged();
+//        }
+//    };
+
     public class ViewHolder extends RecyclerView.ViewHolder {
-        //public CardView hikeItem;
         public TextView hikeNameTextView, locationTextView, dateTextView, timeTextView,
                 daysTextView, lengthTextView, descriptionTextView, parkingTextView,
                 difficultyTextView, gearTextView, hikeId;
@@ -73,16 +117,19 @@ public class HikeAdapter extends RecyclerView.Adapter<HikeAdapter.ViewHolder> {
             hikeId = itemView.findViewById(R.id.itemViewHikeId);
 
             itemView.setOnClickListener(v -> {
-                Bundle extras = new Bundle();
-                extras.putLong("HIKE_ID", Long.valueOf(hikeId.getText().toString()));
+                int adapterPosition = getAdapterPosition();
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    Hike clickedHike = hikes.get(adapterPosition);
+                    Bundle extras = new Bundle();
+                    extras.putLong("HIKE_ID", clickedHike.getId());
 
-                Intent intent = new Intent(v.getContext(), EditActivity.class);
-                intent.putExtras(extras);
-                v.getContext().startActivity(intent);
+                    Intent intent = new Intent(v.getContext(), EditActivity.class);
+                    intent.putExtras(extras);
+                    v.getContext().startActivity(intent);
+                }
             });
         }
     }
-
 
     private String convertParkingStatus(String parkingValue) {
         if ("1".equals(parkingValue)) {
