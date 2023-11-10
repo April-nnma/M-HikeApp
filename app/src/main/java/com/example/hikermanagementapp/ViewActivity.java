@@ -29,19 +29,7 @@ public class ViewActivity extends AppCompatActivity {
         recyclerView.setAdapter(hikeAdapter);
 
         // Initialize SearchView
-//        searchView = findViewById(R.id.searchView);
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
 //
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                hikeAdapter.getFilter().filter(newText);
-//                return false;
-//            }
-//        });
     }
 
     @Override
