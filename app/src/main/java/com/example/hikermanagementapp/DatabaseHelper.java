@@ -42,7 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_TIME + " TEXT, " +
                 COLUMN_NUMBER_OF_DAYS + " INTEGER, " +
                 COLUMN_NUMBER_LENGTH + " TEXT, " +
-                COLUMN_PARKING + " TEXT, " +
+                COLUMN_PARKING + " INTERGER, " +
                 COLUMN_DIFFICULTY + " TEXT, " +
                 COLUMN_DESCRIPTION + " TEXT, " +
                 COLUMN_REQUIRED_GEAR + " TEXT" +
@@ -55,7 +55,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Xử lý khi có sự thay đổi phiên bản cơ sở dữ liệu (nếu cần)
     }
 
-    public long addHike(String name, String location, String date, String time, int number, String length, String parking, String difficult, String description, String gear) {
+    public long addHike(String name, String location, String date, String time, int number, String length, int parking, String difficult, String description, String gear) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_HIKE_NAME, name);
@@ -93,7 +93,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             String time = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIME));
             int numberOfDays = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_NUMBER_OF_DAYS));
             String lengthText = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NUMBER_LENGTH));
-            String parking = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PARKING));
+            int parking = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PARKING));
             String difficulty = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DIFFICULTY));
             String requiredGear = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REQUIRED_GEAR));
             String description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION));
@@ -131,7 +131,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             String time = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIME));
             int numberOfDays = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_NUMBER_OF_DAYS));
             String lengthText = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NUMBER_LENGTH));
-            String parking = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PARKING));
+            int parking = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PARKING));
             String difficulty = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DIFFICULTY));
             String requiredGear = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REQUIRED_GEAR));
             String description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION));
@@ -144,7 +144,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return hike;
     }
 
-    public void editHike(long hikeId, String name, String location, String date, String time, int number, String length, String parking, String difficult, String description, String gear, EditHikeCallback callback) {
+    public void editHike(long hikeId, String name, String location, String date, String time, int number, String length, int parking, String difficult, String description, String gear, EditHikeCallback callback) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_HIKE_NAME, name);

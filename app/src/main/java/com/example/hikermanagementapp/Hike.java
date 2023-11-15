@@ -11,10 +11,10 @@ public class Hike {
     private int numberOfDays;
     private String description;
     private String lengthEditText;
-    private String parking;
+    private int parking;
     private String difficulty;
     private String requiredGear;
-    public Hike(long id, String hikeName, String location, String date, String time, int numberOfDays, String description, String lengthEditText, String parking, String difficulty, String requiredGear) {
+    public Hike(long id, String hikeName, String location, String date, String time, int numberOfDays, String description, String lengthEditText, int parking, String difficulty, String requiredGear) {
         this.id = id;
         this.hikeName = hikeName;
         this.location = location;
@@ -47,7 +47,7 @@ public class Hike {
         return numberOfDays;
     }
     public String getLengthText(){return lengthEditText; }
-    public String getParking() {
+    public int getParking() {
         return parking;
     }
     public String getDifficulty() {
