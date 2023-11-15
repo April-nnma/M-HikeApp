@@ -37,19 +37,17 @@ public class HikeAdapter extends RecyclerView.Adapter<HikeAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Hike hike = hikes.get(position);
-        holder.hikeNameTextView.setText("Name of Hike: " + hike.getHikeName());
-        holder.locationTextView.setText("Location: " + hike.getLocation());
-        holder.dateTextView.setText("Date: " + hike.getDate());
-        holder.timeTextView.setText("Time: " + hike.getTime());
-        holder.daysTextView.setText("Days: " + hike.getNumberOfDays());
-        holder.lengthTextView.setText("Length of Hike: " + hike.getLengthText());
+        holder.hikeNameTextView.setText("" + hike.getHikeName());
+        holder.locationTextView.setText("" + hike.getLocation());
+        holder.dateTextView.setText("" + hike.getDate());
+        holder.timeTextView.setText("" + hike.getTime());
+        holder.daysTextView.setText("" + hike.getNumberOfDays());
+        holder.lengthTextView.setText("" + hike.getLengthText());
         holder.descriptionTextView.setText("Description: " + hike.getDescription());
-
-        // Hiển thị trạng thái của bãi đỗ xe (Available hoặc Not Available)
-        String parkingStatus = convertParkingStatus(hike.getParking());
-        holder.parkingTextView.setText("Parking: " + parkingStatus);
-        holder.difficultyTextView.setText("Level: " + hike.getDifficulty());
-        holder.gearTextView.setText("Required Gear: " + hike.getRequiredGear());
+        int parkingStatus = hike.getParking();
+        holder.parkingTextView.setText("" + convertParkingStatus(parkingStatus));
+        holder.difficultyTextView.setText("" + hike.getDifficulty());
+        holder.gearTextView.setText("Gear: " + hike.getRequiredGear());
 
         holder.hikeId.setText(String.valueOf(hike.getId()));
     }
@@ -58,43 +56,6 @@ public class HikeAdapter extends RecyclerView.Adapter<HikeAdapter.ViewHolder> {
     public int getItemCount() {
         return hikes.size();
     }
-
-//    @Override
-//    public Filter getFilter() {
-//        return hikeFilter;
-//    }
-
-//    private Filter hikeFilter = new Filter() {
-//        @Override
-//        protected FilterResults performFiltering(CharSequence constraint) {
-//            List<Hike> filteredList = new ArrayList<>();
-//
-//            if (constraint == null || constraint.length() == 0) {
-//                filteredList.addAll(hikes);
-//            } else {
-//                String filterPattern = constraint.toString().toLowerCase().trim();
-//
-//                for (Hike hike : hikes) {
-//                    if (hike.getHikeName().toLowerCase().contains(filterPattern)
-//                            || hike.getLocation().toLowerCase().contains(filterPattern)) {
-//                        filteredList.add(hike);
-//                    }
-//                }
-//            }
-//
-//            FilterResults results = new FilterResults();
-//            results.values = filteredList;
-//            return results;
-//        }
-//
-//        @Override
-//        protected void publishResults(CharSequence constraint, FilterResults results) {
-//            hikes.clear();
-//            hikes.addAll((List) results.values);
-//            notifyDataSetChanged();
-//        }
-//    };
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView hikeNameTextView, locationTextView, dateTextView, timeTextView,
                 daysTextView, lengthTextView, descriptionTextView, parkingTextView,
@@ -129,12 +90,13 @@ public class HikeAdapter extends RecyclerView.Adapter<HikeAdapter.ViewHolder> {
         }
     }
 
-    private String convertParkingStatus(String parkingValue) {
-        if ("1".equals(parkingValue)) {
+    private String convertParkingStatus(int parkingValue) {
+        if (parkingValue == 1) {
             return "Available";
-        } else if ("0".equals(parkingValue)) {
+        } else if (parkingValue == 0) {
             return "Not Available";
         }
         return "";
     }
+
 }

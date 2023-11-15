@@ -16,7 +16,7 @@
             android:name=".EditActivity"
             android:exported="false" />
         <activity
-            android:name=".edit"
+            android:name=".Edit"
             android:exported="false" />
         <activity
             android:name=".Observation"

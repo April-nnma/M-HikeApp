@@ -99,7 +99,7 @@ public class EditActivity extends AppCompatActivity {
                 String updatedLength = editLength.getText().toString();
                 String updatedDescription = editDescription.getText().toString();
                 String updatedGear = editGear.getText().toString();
-                String updatedParking = yesRadioButton.isChecked() ? "Yes" : "No";
+                int updatedParking = yesRadioButton.isChecked() ? 1 : 0;
                 String updatedDifficulty = difficultySpinner.getSelectedItem().toString();
 
 

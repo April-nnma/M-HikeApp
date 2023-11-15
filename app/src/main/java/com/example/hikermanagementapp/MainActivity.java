@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private RadioButton yesRadioButton, noRadioButton;
     private Spinner difficultySpinner;
     private EditText lengthEditText;
-    private Button saveButton, viewButton, updateButton;
+    private Button saveButton, viewButton;
     private FloatingActionButton dateFab, timeFab;
 
     private String[] difficultyLevels = {"easy", "normal", "hard"};
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                         String selectedTime = timeEditText.getText().toString();
                         int numberOfDays = Integer.parseInt(numberOfDaysEditText.getText().toString());
                         String length = lengthEditText.getText().toString();
-                        String parkingAvailable = getSelectedParkingOption();
+                        int parkingAvailable = getSelectedParkingOption();
                         String difficulty = difficultySpinner.getSelectedItem().toString();
                         String description = descriptionEditText.getText().toString();
                         String gear = gearEditText.getText().toString();
@@ -172,17 +172,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private String getSelectedParkingOption() {
+    //parking
+    private int getSelectedParkingOption() {
         if (yesRadioButton.isChecked()) {
-            return "Yes";
+            return 1; // 1 represents "Yes"
         } else if (noRadioButton.isChecked()) {
-            return "No";
+            return 0; // 0 represents "No"
         } else {
-            return "Not Specified";
+            return -1; // You may want to handle this case based on your requirements
         }
     }
-
-    private void showDatePickerDialog() {
+    private void showDatePickerDialog()     {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
