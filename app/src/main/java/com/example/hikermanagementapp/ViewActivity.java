@@ -24,6 +24,15 @@ public class ViewActivity extends AppCompatActivity {
 
         searchView = findViewById(R.id.searchView);
         searchView.clearFocus();
+
+        dbHelper = new DatabaseHelper(this);
+        List<Hike> hikes = dbHelper.getAllHikes();
+
+        recyclerView = findViewById(R.id.RVhike);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        hikeAdapter = new HikeAdapter(hikes);
+        recyclerView.setAdapter(hikeAdapter);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -36,21 +45,22 @@ public class ViewActivity extends AppCompatActivity {
                 return true;
             }
         });
-        dbHelper = new DatabaseHelper(this);
-        List<Hike> hikes = dbHelper.getAllHikes();
-
-        recyclerView = findViewById(R.id.RVhike);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        hikeAdapter = new HikeAdapter(hikes);
-        recyclerView.setAdapter(hikeAdapter);
     }
 
     private void filterList(String text) {
         List<Hike> filteredList = new ArrayList<>();
         List<Hike> allHikes = dbHelper.getAllHikes();
+
         for (Hike hike : allHikes) {
-            if (hike.getHikeName().toLowerCase().contains(text.toLowerCase())) {
+            if (hike.getHikeName().toLowerCase().contains(text.toLowerCase()) ||
+                    hike.getLocation().toLowerCase().contains(text.toLowerCase()) ||
+                    hike.getDate().toLowerCase().contains(text.toLowerCase()) ||
+                    hike.getTime().toLowerCase().contains(text.toLowerCase()) ||
+                    String.valueOf(hike.getNumberOfDays()).toLowerCase().contains(text.toLowerCase()) ||
+                    String.valueOf(hike.getParking()).toLowerCase().contains(text.toLowerCase()) ||
+                    hike.getLengthText().toLowerCase().contains(text.toLowerCase()) ||
+                    hike.getDescription().toLowerCase().contains(text.toLowerCase()) ||
+                    hike.getRequiredGear().toLowerCase().contains(text.toLowerCase())) {
                 filteredList.add(hike);
             }
         }
@@ -58,13 +68,11 @@ public class ViewActivity extends AppCompatActivity {
         hikeAdapter.UpdateList(filteredList);
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
         reloadList();
     }
-
     public void reloadList() {
         List<Hike> hikes = dbHelper.getAllHikes();
 

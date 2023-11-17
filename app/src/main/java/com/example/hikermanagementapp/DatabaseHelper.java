@@ -2,7 +2,6 @@ package com.example.hikermanagementapp;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -49,7 +48,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ")";
         db.execSQL(createTableQuery);
     }
-
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Xử lý khi có sự thay đổi phiên bản cơ sở dữ liệu (nếu cần)
@@ -180,7 +178,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         void onEditHikeSuccess();
         void onEditHikeFailure(String errorMessage);
     }
-
 
     public boolean deleteHike(long hikeId) {
         SQLiteDatabase db = this.getWritableDatabase();

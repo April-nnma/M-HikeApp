@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@drawable/screen3"
     android:layout_height="match_parent">
 
     <!-- Hike Name -->
@@ -143,41 +144,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionEditText" />
 
-    <!-- Save Button -->
     <Button
         android:id="@+id/saveButton"
         android:layout_width="97dp"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:text="Save"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.525"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.119"
+        app:layout_constraintStart_toEndOf="@+id/observationButton"
         app:layout_constraintTop_toBottomOf="@+id/gearEditText2" />
 
-    <!-- Image Button -->
     <Button
-        android:id="@+id/imgButton2"
-        android:layout_width="97dp"
-        android:layout_height="48dp"
+        android:id="@+id/observationButton"
+        android:layout_width="164dp"
+        android:layout_height="50dp"
         android:layout_marginTop="20dp"
-        android:text="IMAGE"
+        android:text="OBSERVATION"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.063"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gearEditText2" />
 
-    <!-- View Button -->
     <Button
         android:id="@+id/viewButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="20dp"
         android:text="View"
         app:layout_constraintStart_toEndOf="@+id/saveButton"
-        app:layout_constraintTop_toTopOf="@+id/saveButton" />
+        app:layout_constraintTop_toBottomOf="@+id/gearEditText2" />
 
-    <!-- Date FloatingActionButton -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
@@ -237,9 +235,9 @@
     <!--Title text-->
     <TextView
         android:id="@+id/titleText"
-        android:layout_width="62dp"
-        android:layout_height="24dp"
-        android:text="ADD"
+        android:layout_width="100dp"
+        android:layout_height="27dp"
+        android:text="ADD HIKE"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

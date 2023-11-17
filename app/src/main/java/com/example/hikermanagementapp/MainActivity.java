@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private RadioButton yesRadioButton, noRadioButton;
     private Spinner difficultySpinner;
     private EditText lengthEditText;
-    private Button saveButton, viewButton;
+    private Button saveButton, viewButton, observationButton;
     private FloatingActionButton dateFab, timeFab;
 
     private String[] difficultyLevels = {"easy", "normal", "hard"};
@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         difficultySpinner = findViewById(R.id.difficultySpinner);
         saveButton = findViewById(R.id.saveButton);
         viewButton = findViewById(R.id.viewButton);
+        observationButton = findViewById(R.id.observationButton);
         dateFab = findViewById(R.id.floatingActionButton);
         timeFab = findViewById(R.id.floatingActionButton2);
 
@@ -156,6 +157,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        //observation
+//        observationButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(MainActivity.this, AddObservation.class);
+//                startActivity(intent);
+//            }
+//        });
 
         //Date & Time Picker
         dateFab.setOnClickListener(new View.OnClickListener() {

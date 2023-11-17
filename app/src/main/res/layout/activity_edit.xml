@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/screen3">
 
     <EditText
         android:id="@+id/editHike"
@@ -226,9 +227,9 @@
 
     <TextView
         android:id="@+id/titleText"
-        android:layout_width="62dp"
+        android:layout_width="100dp"
         android:layout_height="24dp"
-        android:text="EDIT"
+        android:text="EDIT HIKE"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

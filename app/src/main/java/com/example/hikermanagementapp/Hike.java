@@ -1,7 +1,4 @@
 package com.example.hikermanagementapp;
-
-import java.io.Serializable;
-
 public class Hike {
     private long id;
     private String hikeName;
@@ -27,7 +24,6 @@ public class Hike {
         this.difficulty = difficulty;
         this.requiredGear = requiredGear;
     }
-
     public long getId() {
         return id;
     }
@@ -40,9 +36,7 @@ public class Hike {
     public String getDate() {
         return date;
     }
-    public String getTime() {
-        return time;
-    }
+    public String getTime() { return time; }
     public int getNumberOfDays() {
         return numberOfDays;
     }
@@ -59,5 +53,4 @@ public class Hike {
     public String getRequiredGear() {
         return requiredGear;
     }
-
 }
