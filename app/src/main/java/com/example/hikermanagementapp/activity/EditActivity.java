@@ -1,12 +1,9 @@
-package com.example.hikermanagementapp;
+package com.example.hikermanagementapp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -19,6 +16,9 @@ import android.widget.DatePicker;
 import android.widget.TimePicker;
 import android.widget.Spinner;
 
+import com.example.hikermanagementapp.R;
+import com.example.hikermanagementapp.database.DatabaseHelper;
+import com.example.hikermanagementapp.model.Hike;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Calendar;

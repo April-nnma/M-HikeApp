@@ -1,16 +1,12 @@
 package com.example.hikermanagementapp;
 
-import static android.content.DialogInterface.*;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.health.connect.datatypes.units.Length;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +17,9 @@ import android.widget.DatePicker;
 import android.widget.TimePicker;
 import android.widget.ArrayAdapter;
 
+import com.example.hikermanagementapp.activity.AddObservationActivity;
+import com.example.hikermanagementapp.activity.ViewActivity;
+import com.example.hikermanagementapp.database.DatabaseHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -157,14 +156,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        //observation
-//        observationButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this, AddObservation.class);
-//                startActivity(intent);
-//            }
-//        });
+//        observation
+        observationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddObservationActivity.class);
+                startActivity(intent);
+            }
+        });
 
         //Date & Time Picker
         dateFab.setOnClickListener(new View.OnClickListener() {

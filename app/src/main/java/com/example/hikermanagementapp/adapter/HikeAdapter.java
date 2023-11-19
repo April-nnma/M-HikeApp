@@ -1,4 +1,4 @@
-package com.example.hikermanagementapp;
+package com.example.hikermanagementapp.adapter;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.hikermanagementapp.activity.EditActivity;
+import com.example.hikermanagementapp.model.Hike;
+import com.example.hikermanagementapp.R;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,11 +1,15 @@
-package com.example.hikermanagementapp;
+package com.example.hikermanagementapp.activity;
 
-import android.media.RouteListingPreference;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.hikermanagementapp.R;
+import com.example.hikermanagementapp.adapter.HikeAdapter;
+import com.example.hikermanagementapp.database.DatabaseHelper;
+import com.example.hikermanagementapp.model.Hike;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -22,12 +22,17 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/imageViewCapture"
-                android:layout_width="178dp"
-                android:layout_height="190dp"
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imageView"
+                android:layout_width="181dp"
+                android:layout_height="181dp"
                 android:layout_marginTop="16dp"
-                android:contentDescription="Captured Image" />
+                android:background="@color/purple_200"
+                android:contentDescription="Captured Image"
+                android:src="@drawable/present"
+                app:shapeAppearanceOverlay="@style/circular"
+                app:strokeColor="@color/white"
+                app:strokeWidth="2dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -35,21 +40,32 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/viewDateObservation"
-                android:layout_width="0dp"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_weight="18"
-                android:hint=""/>
+                android:layout_weight="2"
+                android:gravity="end|center_vertical"
+                android:text="Date: " />
 
             <EditText
-                android:id="@+id/viewTimeObservation"
+                android:id="@+id/dateViewObservation"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
-                android:layout_weight="14"
-                android:layout_marginEnd="10dp"
+                android:layout_weight="20"
+                android:hint="" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:gravity="end|center_vertical"
+                android:text="Time: " />
+
+            <EditText
+                android:id="@+id/timeViewObservation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
                 android:hint="" />
         </LinearLayout>
 
@@ -58,13 +74,19 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="end|center_vertical"
+                android:text="Comment: " />
+
             <EditText
-                android:id="@+id/viewCommentObservation"
+                android:id="@+id/commentViewObservation"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_weight="10"
+                android:layout_marginStart="40dp"
+                android:layout_weight="20"
                 android:hint="" />
         </LinearLayout>
     </LinearLayout>

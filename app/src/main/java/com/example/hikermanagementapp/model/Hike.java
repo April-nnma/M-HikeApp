@@ -1,4 +1,4 @@
-package com.example.hikermanagementapp;
+package com.example.hikermanagementapp.model;
 public class Hike {
     private long id;
     private String hikeName;
