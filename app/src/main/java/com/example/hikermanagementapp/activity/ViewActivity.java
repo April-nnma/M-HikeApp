@@ -62,6 +62,7 @@ public class ViewActivity extends AppCompatActivity {
                     hike.getTime().toLowerCase().contains(text.toLowerCase()) ||
                     String.valueOf(hike.getNumberOfDays()).toLowerCase().contains(text.toLowerCase()) ||
                     String.valueOf(hike.getParking()).toLowerCase().contains(text.toLowerCase()) ||
+                    hike.getDifficulty().toLowerCase().contains(text.toLowerCase()) ||
                     hike.getLengthText().toLowerCase().contains(text.toLowerCase()) ||
                     hike.getDescription().toLowerCase().contains(text.toLowerCase()) ||
                     hike.getRequiredGear().toLowerCase().contains(text.toLowerCase())) {
