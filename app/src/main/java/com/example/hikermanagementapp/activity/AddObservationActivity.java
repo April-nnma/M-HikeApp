@@ -41,6 +41,7 @@ public class AddObservationActivity extends AppCompatActivity {
     private Button buttonSave, buttonView, buttonCapture;
     private FloatingActionButton dateFab, timeFab;
     private DatabaseHandler databaseHandler;
+    private int observationId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

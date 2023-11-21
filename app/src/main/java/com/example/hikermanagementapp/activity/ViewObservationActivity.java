@@ -43,6 +43,6 @@ public class ViewObservationActivity  extends AppCompatActivity {
     private void reloadList() {
         observationList.clear();
         observationList.addAll(databaseHandler.getAllObservations());
-        observationAdapter.notifyDataSetChanged();
+        observationAdapter.updateObservationList(observationList);;
     }
 }

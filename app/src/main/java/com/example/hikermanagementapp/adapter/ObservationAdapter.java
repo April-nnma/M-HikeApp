@@ -1,6 +1,9 @@
 package com.example.hikermanagementapp.adapter;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,19 +14,28 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hikermanagementapp.R;
+import com.example.hikermanagementapp.activity.EditActivity;
+import com.example.hikermanagementapp.activity.EditObservationActivity;
+import com.example.hikermanagementapp.model.Hike;
 import com.example.hikermanagementapp.model.ObservationModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ObservationAdapter extends RecyclerView.Adapter<ObservationAdapter.ViewHolder> {
     private List<ObservationModel> observationList;
 
     public ObservationAdapter(List<ObservationModel> observationList) {
-        this.observationList = observationList;
+        this.observationList = new ArrayList<>(observationList);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView dateViewObservation, timeViewObservation, commentViewObservation;
+    public void updateObservationList(List<ObservationModel> observationList) {
+        this.observationList = new ArrayList<>(observationList);
+        notifyDataSetChanged();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView dateViewObservation, timeViewObservation, commentViewObservation, observationId;
         public ImageView imageViewProfile;
 
         public ViewHolder(View itemView) {
@@ -32,6 +44,20 @@ public class ObservationAdapter extends RecyclerView.Adapter<ObservationAdapter.
             timeViewObservation = itemView.findViewById(R.id.timeViewObservation);
             commentViewObservation = itemView.findViewById(R.id.commentViewObservation);
             imageViewProfile = itemView.findViewById(R.id.imageView);
+            observationId = itemView.findViewById(R.id.itemViewObservationId);
+
+            itemView.setOnClickListener(v -> {
+                int adapterPosition = getAdapterPosition();
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    ObservationModel clickedObservation = observationList.get(adapterPosition);
+                    Bundle extras = new Bundle();
+                    extras.putLong("OBSERVATION_ID", clickedObservation.getId());
+
+                    Intent intent = new Intent(v.getContext(), EditObservationActivity.class);
+                    intent.putExtras(extras);
+                    v.getContext().startActivity(intent);
+                }
+            });
         }
     }
 
@@ -46,16 +72,15 @@ public class ObservationAdapter extends RecyclerView.Adapter<ObservationAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ObservationModel observation = observationList.get(position);
-        holder.dateViewObservation.setText("" + observation.getDate());
-        holder.timeViewObservation.setText("" + observation.getTime());
-        holder.commentViewObservation.setText("" + observation.getComment());
+        holder.dateViewObservation.setText(observation.getDate());
+        holder.timeViewObservation.setText(observation.getTime());
+        holder.commentViewObservation.setText(observation.getComment());
+        holder.observationId.setText(String.valueOf(observation.getId()));
 
-        // Assuming you have a method in ContactModel to get the profile image as Bitmap
         Bitmap profileImage = observation.getProfileImage();
         if (profileImage != null) {
             holder.imageViewProfile.setImageBitmap(profileImage);
         } else {
-            // If the profile image is null, you may set a default image or handle it as per your requirement
             holder.imageViewProfile.setImageResource(R.drawable.image1);
         }
     }

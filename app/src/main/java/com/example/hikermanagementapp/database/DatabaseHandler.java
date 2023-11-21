@@ -57,7 +57,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_TIME, observation.getTime());
         values.put(KEY_COMMENT, observation.getComment());
         // Convert Bitmap to byte array
-        byte[] profileImageBytes = com.example.hikermanagementapp.database.DatabaseUtils.getBytes(observation.getProfileImage());
+        byte[] profileImageBytes = DatabaseUtils.getBytes(observation.getProfileImage());
         values.put(KEY_PROFILE_IMAGE, profileImageBytes);
 
         // Inserting Row
@@ -84,18 +84,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 int timeIndex = cursor.getColumnIndex(KEY_TIME);
                 int commentIndex = cursor.getColumnIndex(KEY_COMMENT);
                 int imageIndex = cursor.getColumnIndex(KEY_PROFILE_IMAGE);
+                int idIndex = cursor.getColumnIndex(KEY_ID);
 
                 // Loop through rows and add to the list
                 do {
                     // Convert byte array to Bitmap
                     byte[] profileImageBytes = cursor.getBlob(imageIndex);
-                    Bitmap profileImage = com.example.hikermanagementapp.database.DatabaseUtils.getImage(profileImageBytes);
+                    Bitmap profileImage = DatabaseUtils.getImage(profileImageBytes);
 
                     ObservationModel observation = new ObservationModel(
                             cursor.getString(dateIndex),
                             cursor.getString(timeIndex),
                             cursor.getString(commentIndex),
                             profileImage);
+                    observation.setId(cursor.getLong(idIndex));
                     observationList.add(observation);
 
                 } while (cursor.moveToNext());
@@ -111,4 +113,93 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return observationList;
     }
 
+    public ObservationModel getObservationById(long observationId) {
+        ObservationModel observation = null;
+        String selectQuery = "SELECT * FROM " + TABLE_OBSERVATIONS + " WHERE " + KEY_ID + " = " + observationId;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+
+        try {
+            cursor = db.rawQuery(selectQuery, null);
+
+            // Check if the cursor is not null and has rows
+            if (cursor != null && cursor.moveToFirst()) {
+                int dateIndex = cursor.getColumnIndex(KEY_DATE);
+                int timeIndex = cursor.getColumnIndex(KEY_TIME);
+                int commentIndex = cursor.getColumnIndex(KEY_COMMENT);
+                int imageIndex = cursor.getColumnIndex(KEY_PROFILE_IMAGE);
+                int idIndex = cursor.getColumnIndex(KEY_ID);
+
+                // Loop through rows and add to the list
+                do {
+                    // Convert byte array to Bitmap
+                    byte[] profileImageBytes = cursor.getBlob(imageIndex);
+                    Bitmap profileImage = DatabaseUtils.getImage(profileImageBytes);
+
+                    observation = new ObservationModel(
+                            cursor.getString(dateIndex),
+                            cursor.getString(timeIndex),
+                            cursor.getString(commentIndex),
+                            profileImage);
+                    observation.setId(cursor.getLong(idIndex));
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+
+        return observation;
+    }
+
+    // Edit an existing observation
+    public void editObservation(long observationId, String newDate, String newTime, String newComment, EditObservationCallBack callBack) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_DATE, newDate);
+        values.put(KEY_TIME, newTime);
+        values.put(KEY_COMMENT, newComment);
+
+        int rowsAffected = db.update(TABLE_OBSERVATIONS, values, KEY_ID + " = ?",
+                new String[]{String.valueOf(observationId)});
+
+        if (rowsAffected > 0) {
+            callBack.onEditObservationSuccess();
+        } else {
+            callBack.onEditObservationFailure("No rows were affected during the update.");
+        }
+
+        db.close();
+    }
+
+    // Delete an observation
+    public void deleteObservation(long observationId, DeleteObservationCallBack callBack) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsAffected = db.delete(TABLE_OBSERVATIONS, KEY_ID + " = ?",
+                new String[]{String.valueOf(observationId)});
+
+        if (rowsAffected > 0) {
+            callBack.onDeleteObservationSuccess();
+        } else {
+            callBack.onDeleteObservationFailure("No rows were affected during the delete operation.");
+        }
+
+        db.close();
+    }
+
+    public interface EditObservationCallBack {
+        void onEditObservationSuccess();
+
+        void onEditObservationFailure(String errorMessage);
+    }
+
+    public interface DeleteObservationCallBack {
+        void onDeleteObservationSuccess();
+
+        void onDeleteObservationFailure(String errorMessage);
+    }
 }
