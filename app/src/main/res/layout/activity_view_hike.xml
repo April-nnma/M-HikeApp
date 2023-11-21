@@ -16,7 +16,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        app:queryHint="Search name hike"
+        app:queryHint="Search ......."
         app:iconifiedByDefault="false">
     </androidx.appcompat.widget.SearchView>
 
