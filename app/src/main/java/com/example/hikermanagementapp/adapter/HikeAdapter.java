@@ -22,11 +22,11 @@ public class HikeAdapter extends RecyclerView.Adapter<HikeAdapter.ViewHolder> {
     private List<Hike> hikes;
 
     public HikeAdapter(List<Hike> hikes) {
-        this.hikes = new ArrayList<>(hikes); // Initialize full list with original data
+        this.hikes = new ArrayList<>(hikes);
     }
 
     public void UpdateList(List<Hike> hikes) {
-        this.hikes = new ArrayList<>(hikes); // Initialize full list with original data
+        this.hikes = new ArrayList<>(hikes);
 
         notifyDataSetChanged();
     }

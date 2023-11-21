@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -73,9 +74,10 @@ public class EditObservationActivity extends AppCompatActivity {
             String updateDate = dateObservation.getText().toString();
             String updateTime = timeObservation.getText().toString();
             String updateComment = commentObservation.getText().toString();
+            Bitmap profileImage = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
             DatabaseHandler databaseHandler = new DatabaseHandler(EditObservationActivity.this);
-            databaseHandler.editObservation(observationId, updateDate, updateTime, updateComment, new DatabaseHandler.EditObservationCallBack() {
+            databaseHandler.editObservation(observationId, updateDate, updateTime, updateComment, profileImage, new DatabaseHandler.EditObservationCallBack() {
                 @Override
                 public void onEditObservationSuccess() {
                     showAlert("Success", "Observation information has been updated successfully.");
@@ -185,6 +187,5 @@ public class EditObservationActivity extends AppCompatActivity {
     }
 
     private void showAlert(String title, String message) {
-        // Implement your alert dialog logic here
     }
 }

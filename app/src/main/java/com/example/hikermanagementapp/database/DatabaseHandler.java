@@ -56,7 +56,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_DATE, observation.getDate());
         values.put(KEY_TIME, observation.getTime());
         values.put(KEY_COMMENT, observation.getComment());
-        // Convert Bitmap to byte array
+
         byte[] profileImageBytes = DatabaseUtils.getBytes(observation.getProfileImage());
         values.put(KEY_PROFILE_IMAGE, profileImageBytes);
 
@@ -69,7 +69,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public List<ObservationModel> getAllObservations() {
         List<ObservationModel> observationList = new ArrayList<>();
 
-        // Select All Query
         String selectQuery = "SELECT * FROM " + TABLE_OBSERVATIONS;
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -156,13 +155,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return observation;
     }
 
-    // Edit an existing observation
-    public void editObservation(long observationId, String newDate, String newTime, String newComment, EditObservationCallBack callBack) {
+    // Edit observation
+    public void editObservation(long observationId, String newDate, String newTime, String newComment, Bitmap profileImage, EditObservationCallBack callBack) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_DATE, newDate);
         values.put(KEY_TIME, newTime);
         values.put(KEY_COMMENT, newComment);
+
+        // Convert Bitmap to byte array
+        byte[] profileImageBytes = DatabaseUtils.getBytes(profileImage);
+        values.put(KEY_PROFILE_IMAGE, profileImageBytes);
 
         int rowsAffected = db.update(TABLE_OBSERVATIONS, values, KEY_ID + " = ?",
                 new String[]{String.valueOf(observationId)});
@@ -175,12 +178,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         db.close();
     }
+
     public interface EditObservationCallBack {
         void onEditObservationSuccess();
         void onEditObservationFailure(String errorMessage);
     }
 
-    // Delete an observation
+    // Delete observation
     public void deleteObservation(long observationId, DeleteObservationCallBack callBack) {
         SQLiteDatabase db = this.getWritableDatabase();
         int rowsAffected = db.delete(TABLE_OBSERVATIONS, KEY_ID + " = ?",
