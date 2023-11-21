@@ -175,6 +175,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         db.close();
     }
+    public interface EditObservationCallBack {
+        void onEditObservationSuccess();
+        void onEditObservationFailure(String errorMessage);
+    }
 
     // Delete an observation
     public void deleteObservation(long observationId, DeleteObservationCallBack callBack) {
@@ -189,12 +193,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         db.close();
-    }
-
-    public interface EditObservationCallBack {
-        void onEditObservationSuccess();
-
-        void onEditObservationFailure(String errorMessage);
     }
 
     public interface DeleteObservationCallBack {

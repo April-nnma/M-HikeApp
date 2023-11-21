@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.example.hikermanagementapp.activity.AddObservationActivity;
 import com.example.hikermanagementapp.activity.ViewActivity;
@@ -92,6 +93,11 @@ public class MainActivity extends AppCompatActivity {
                         String difficulty = difficultySpinner.getSelectedItem().toString();
                         String description = descriptionEditText.getText().toString();
                         String gear = gearEditText.getText().toString();
+
+                        if (hikeName.isEmpty() || location.isEmpty() || selectedDate.isEmpty() || selectedTime.isEmpty() || numberOfDays <= 0 || length.isEmpty() || parkingAvailable < 0 || difficulty.isEmpty() || description.isEmpty() || gear.isEmpty()) {
+                            Toast.makeText(MainActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
                         long newRowId = dbHelper.addHike(hikeName, location, selectedDate, selectedTime, numberOfDays, length, parkingAvailable, difficulty, description, gear);
 
